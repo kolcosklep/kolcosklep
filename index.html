@@ -68,7 +68,7 @@ margin-top:40px;
 <body>
 
 <header>
-<div class="logo">🐡 Kolcosklep zrobione przez Piotr M</div>
+<div class="logo">🐡 Kolcosklep</div>
 <img src="https://media.canva.com/v2/image-resize/format:PNG/height:366/quality:100/uri:ifs%3A%2F%2FM%2F53a20cbf-3a95-4d6b-8d2a-026e712bd2d1/watermark:F/width:550?csig=AAAAAAAAAAAAAAAAAAAAAAcKpvU2bLEi8szbnvtLl1sgdR1u5qLfo0DEtt8Yonab&exp=1773248976&osig=AAAAAAAAAAAAAAAAAAAAAALn-zzTu_3Q4Ex1ygnoQYO9fcG08NGrYPE_3NRTeNM4&signer=media-rpc&x-canva-quality=thumbnail_large">
 <p>Wszystko o kolcobrzuchu karłowatym</p>
 </header>
@@ -192,25 +192,84 @@ position:relative;
 overflow:hidden;
 }
 
-#fish{
-position:absolute;
-font-size:40px;
-left:280px;
-top:180px;
+```html
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<title>Kolcosklep - Gra z kolcobrzuchiem</title>
+
+<style>
+
+body{
+margin:0;
+font-family:Arial;
+background:#8ed6ff;
+text-align:center;
 }
 
+h1{
+margin:10px;
+}
+
+#hud{
+font-size:22px;
+margin-bottom:10px;
+}
+
+#game{
+width:700px;
+height:420px;
+margin:auto;
+border:4px solid #333;
+overflow:hidden;
+position:relative;
+background:linear-gradient(#6fd3ff,#9be3ff);
+}
+
+/* przesuwające się tło */
+#water{
+position:absolute;
+width:2000px;
+height:100%;
+background:linear-gradient(90deg,#7ad9ff,#9be3ff,#7ad9ff);
+animation:waterMove 20s linear infinite;
+}
+
+@keyframes waterMove{
+0%{left:0}
+100%{left:-1000px}
+}
+
+/* rośliny */
+.plant{
+position:absolute;
+bottom:0;
+font-size:40px;
+animation:plantWave 3s ease-in-out infinite;
+}
+
+@keyframes plantWave{
+0%{transform:rotate(-3deg)}
+50%{transform:rotate(3deg)}
+100%{transform:rotate(-3deg)}
+}
+
+/* ryba */
+#fish{
+position:absolute;
+font-size:45px;
+transition:transform 0.1s;
+}
+
+/* ślimaki */
 .snail{
 position:absolute;
 font-size:30px;
 }
 
-#score{
-font-size:22px;
-margin:10px;
-}
-
 #controls{
-margin-top:20px;
+margin-top:15px;
 }
 
 button{
@@ -224,92 +283,145 @@ margin:5px;
 
 <body>
 
-<h1>🐡 Zbieraj ślimaki!</h1>
+<h1>🐡 Złap jak najwięcej ślimaków!</h1>
 
-<div id="score">Punkty: 0</div>
+<div id="hud">
+⏱ Czas: <span id="time">120</span> s |
+⭐ Punkty: <span id="score">0</span>
+</div>
 
 <div id="game">
+
+<div id="water"></div>
+
+<div class="plant" style="left:40px">🌿</div>
+<div class="plant" style="left:200px">🌿</div>
+<div class="plant" style="left:380px">🌿</div>
+<div class="plant" style="left:540px">🌿</div>
+
 <div id="fish">🐡</div>
+
 </div>
 
 <div id="controls">
-
 <div>
-<button onclick="move('up')">⬆️</button>
+<button onclick="setDir('up')">⬆️</button>
 </div>
 
 <div>
-<button onclick="move('left')">⬅️</button>
-<button onclick="move('down')">⬇️</button>
-<button onclick="move('right')">➡️</button>
+<button onclick="setDir('left')">⬅️</button>
+<button onclick="setDir('down')">⬇️</button>
+<button onclick="setDir('right')">➡️</button>
 </div>
-
 </div>
 
 <script>
 
-let fish = document.getElementById("fish")
-let game = document.getElementById("game")
-let scoreText = document.getElementById("score")
+let fish=document.getElementById("fish")
+let game=document.getElementById("game")
 
-let x = 280
-let y = 180
-let speed = 20
-let score = 0
+let x=300
+let y=200
+let vx=0
+let vy=0
+let speed=0.5
 
-function move(direction){
+let score=0
+let time=120
 
-if(direction === "up") y -= speed
-if(direction === "down") y += speed
-if(direction === "left") x -= speed
-if(direction === "right") x += speed
+function setDir(dir){
 
-fish.style.left = x + "px"
-fish.style.top = y + "px"
-
-checkSnail()
+if(dir==="up") vy=-2
+if(dir==="down") vy=2
+if(dir==="left"){
+vx=-2
+fish.style.transform="scaleX(-1)"
+}
+if(dir==="right"){
+vx=2
+fish.style.transform="scaleX(1)"
+}
 
 }
 
-document.addEventListener("keydown", function(e){
+document.addEventListener("keydown",e=>{
 
-if(e.key === "ArrowUp") move("up")
-if(e.key === "ArrowDown") move("down")
-if(e.key === "ArrowLeft") move("left")
-if(e.key === "ArrowRight") move("right")
+if(e.key==="ArrowUp") setDir("up")
+if(e.key==="ArrowDown") setDir("down")
+if(e.key==="ArrowLeft") setDir("left")
+if(e.key==="ArrowRight") setDir("right")
 
 })
 
-function createSnail(){
+function gameLoop(){
 
-let snail = document.createElement("div")
-snail.className = "snail"
-snail.innerHTML = "🐌"
+x+=vx
+y+=vy
 
-snail.style.left = Math.random()*560 + "px"
-snail.style.top = Math.random()*360 + "px"
+vx*=0.9
+vy*=0.9
+
+if(x<0)x=0
+if(y<0)y=0
+if(x>660)x=660
+if(y>380)y=380
+
+fish.style.left=x+"px"
+fish.style.top=y+"px"
+
+moveSnails()
+checkCatch()
+
+requestAnimationFrame(gameLoop)
+
+}
+
+function spawnSnail(){
+
+let snail=document.createElement("div")
+snail.className="snail"
+snail.innerHTML="🐌"
+
+snail.x=Math.random()*650
+snail.y=Math.random()*380
+
+snail.style.left=snail.x+"px"
+snail.style.top=snail.y+"px"
 
 game.appendChild(snail)
 
 }
 
-function checkSnail(){
+function moveSnails(){
 
-let snails = document.querySelectorAll(".snail")
+let snails=document.querySelectorAll(".snail")
 
-snails.forEach(snail =>{
+snails.forEach(s=>{
 
-let sx = snail.offsetLeft
-let sy = snail.offsetTop
+s.x+=Math.random()*0.5-0.25
+s.y+=Math.random()*0.5-0.25
 
-if(Math.abs(x - sx) < 30 && Math.abs(y - sy) < 30){
+s.style.left=s.x+"px"
+s.style.top=s.y+"px"
 
-snail.remove()
+})
+
+}
+
+function checkCatch(){
+
+let snails=document.querySelectorAll(".snail")
+
+snails.forEach(s=>{
+
+if(Math.abs(x-s.x)<30 && Math.abs(y-s.y)<30){
+
+s.remove()
 
 score++
-scoreText.innerHTML = "Punkty: " + score
+document.getElementById("score").innerText=score
 
-createSnail()
+spawnSnail()
 
 }
 
@@ -317,19 +429,37 @@ createSnail()
 
 }
 
-createSnail()
+setInterval(()=>{
+
+time--
+document.getElementById("time").innerText=time
+
+if(time<=0){
+
+alert("Koniec gry! Twój wynik: "+score)
+location.reload()
+
+}
+
+},1000)
+
+for(let i=0;i<5;i++) spawnSnail()
+
+
+
+gameLoop()
 
 </script>
 
 </body>
 </html>
-<p>© 2026 Kolcosklep zrobiny przez Piotr M</p>
+```
+
+<p>© 2026 Kolcosklep</p>
 <p>www.kolcosklep.com</p>
 
 </footer>
 
 </body>
 </html>
-
-
 
