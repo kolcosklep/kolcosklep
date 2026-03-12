@@ -5,7 +5,19 @@
 <title>Kolcosklep - Kolcobrzuch Karłowaty</title>
 
 <style>
+.ballon-fish {
+  position:fixed;
+  font-size: 40px;
+  top: -50px;
+  animation: fishFly 3s linear forwards;
+  pointer-events: none;
+  z-index: 9999;
+}
 
+@keyframes fishFly {
+  0% { transform: translateX(0) translateY(0) rotate(0deg); opacity: 1; }
+  100% { transform: translateX(100vw) translateY(500px) rotate(360deg); opacity: 0; }
+}
 body{
 font-family: Arial;
 margin:0;
@@ -68,18 +80,18 @@ margin-top:40px;
 <body>
 
 <header>
-<div class="logo">🐡 Kolcosklep</div>
+<header id="top">
+  <div class="logo">🐡 Kolcosklep</div>
 <img src="https://media.canva.com/v2/image-resize/format:PNG/height:366/quality:100/uri:ifs%3A%2F%2FM%2F53a20cbf-3a95-4d6b-8d2a-026e712bd2d1/watermark:F/width:550?csig=AAAAAAAAAAAAAAAAAAAAAAcKpvU2bLEi8szbnvtLl1sgdR1u5qLfo0DEtt8Yonab&exp=1773248976&osig=AAAAAAAAAAAAAAAAAAAAAALn-zzTu_3Q4Ex1ygnoQYO9fcG08NGrYPE_3NRTeNM4&signer=media-rpc&x-canva-quality=thumbnail_large">
 <p>Wszystko o kolcobrzuchu karłowatym</p>
 </header>
 
 <nav>
-<a href="#">Strona główna</a>
-<a href="#">O rybie</a>
-<a href="#">Hodowla</a>
-<a href="#">Kontakt</a>
+  <a href="#top" onclick="spawnBalloonFish()">Strona główna</a>
+  <a href="#ciekawostki" onclick="spawnBalloonFish()">Ciekawostki</a>
+  <a href="#game-section" onclick="spawnBalloonFish()">Gra</a>
+  <a href="#gallery-section" onclick="spawnBalloonFish()">Galeria</a>
 </nav>
-
 <div class="hero">
 <h1>Kolcobrzuch Karłowaty</h1>
 <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6a/Kolcobrzuch_kar%C5%82owaty.jpg/250px-Kolcobrzuch_kar%C5%82owaty.jpg">
@@ -104,16 +116,10 @@ Jest bardzo inteligentną rybą i potrafi rozpoznawać swojego opiekuna.
 <li>Dużo roślin i kryjówek</li>
 </ul>
 
-<h2>Ciekawostka</h2>
-
-<p>
-Kolcobrzuch potrafi nadmuchać swoje ciało jak balon,
-aby odstraszyć drapieżniki.
 
 </p>
-<section class="ciekawostki">
-
-<h2>🐡 Ciekawostki o kolcobrzuchu karłowatym</h2>
+<section class="ciekawostki" id="ciekawostki">
+  <h2>🐡 Ciekawostki o kolcobrzuchu karłowatym</h2>
 
 <ul>
 
@@ -173,7 +179,9 @@ margin-bottom:20px;
 <head>
 <meta charset="UTF-8">
 <title>Kolcosklep - Gra</title>
-
+<div id="game-section">
+  <h2>🎮 Gra z kolcobrzuchiem</h2>
+  <div id="viewport">
 <style>
 
 body{
@@ -193,32 +201,33 @@ overflow:hidden;
 }
 
 ```html
+```html
 <!DOCTYPE html>
 <html lang="pl">
 <head>
 <meta charset="UTF-8">
-<title>Kolcosklep - Gra z kolcobrzuchiem</title>
+<title>Kolcosklep - Gra</title>
 
 <style>
 
 body{
 margin:0;
 font-family:Arial;
-background:#8ed6ff;
+background:#a8e6ff;
 text-align:center;
 }
 
-h1{
-margin:10px;
-}
+/* HUD */
 
 #hud{
 font-size:22px;
-margin-bottom:10px;
+margin:10px;
 }
 
+/* GRA */
+
 #game{
-width:700px;
+width:720px;
 height:420px;
 margin:auto;
 border:4px solid #333;
@@ -227,21 +236,24 @@ position:relative;
 background:linear-gradient(#6fd3ff,#9be3ff);
 }
 
-/* przesuwające się tło */
+/* falująca woda */
+
 #water{
 position:absolute;
-width:2000px;
+width:200%;
 height:100%;
-background:linear-gradient(90deg,#7ad9ff,#9be3ff,#7ad9ff);
-animation:waterMove 20s linear infinite;
+background:linear-gradient(90deg,#6fd3ff,#8fe0ff,#6fd3ff);
+opacity:0.3;
+animation:waterMove 10s linear infinite;
 }
 
 @keyframes waterMove{
 0%{left:0}
-100%{left:-1000px}
+100%{left:-50%}
 }
 
 /* rośliny */
+
 .plant{
 position:absolute;
 bottom:0;
@@ -250,60 +262,101 @@ animation:plantWave 3s ease-in-out infinite;
 }
 
 @keyframes plantWave{
-0%{transform:rotate(-3deg)}
-50%{transform:rotate(3deg)}
-100%{transform:rotate(-3deg)}
+0%{transform:rotate(-4deg)}
+50%{transform:rotate(4deg)}
+100%{transform:rotate(-4deg)}
 }
 
 /* ryba */
+
 #fish{
 position:absolute;
 font-size:45px;
-transition:transform 0.1s;
+}
+
+/* inne ryby */
+
+.otherFish{
+position:absolute;
+font-size:32px;
+opacity:0.8;
 }
 
 /* ślimaki */
+
 .snail{
 position:absolute;
-font-size:30px;
+font-size:28px;
 }
 
-#controls{
+/* krewetki */
+
+.shrimp{
+position:absolute;
+font-size:26px;
+}
+
+/* joystick */
+
+#joystick{
+width:120px;
+height:120px;
+border-radius:60px;
+background:rgba(0,0,0,0.15);
+position:absolute;
+bottom:20px;
+left:20px;
+}
+
+#stick{
+width:50px;
+height:50px;
+border-radius:25px;
+background:#444;
+position:absolute;
+left:35px;
+top:35px;
+}
+
+/* ranking */
+
+#ranking{
+margin-top:20px;
+}
+#arrows{
 margin-top:15px;
 }
 
-button{
-font-size:25px;
-padding:10px 20px;
-margin:5px;
+#arrows button{
+font-size:28px;
+padding:10px 18px;
+margin:4px;
 }
-
 </style>
 </head>
 
 <body>
 
-<h1>🐡 Złap jak najwięcej ślimaków!</h1>
+<h2>🐡 Kolcosklep – złap jak najwięcej ślimaków!</h2>
 
 <div id="hud">
-⏱ Czas: <span id="time">120</span> s |
-⭐ Punkty: <span id="score">0</span>
+⭐ Punkty: <span id="score">0</span> |
+⏱ Czas: <span id="time">120</span>
 </div>
 
 <div id="game">
 
 <div id="water"></div>
 
-<div class="plant" style="left:40px">🌿</div>
-<div class="plant" style="left:200px">🌿</div>
-<div class="plant" style="left:380px">🌿</div>
-<div class="plant" style="left:540px">🌿</div>
-
 <div id="fish">🐡</div>
 
+<div id="joystick">
+<div id="stick"></div>
 </div>
 
-<div id="controls">
+</div>
+<div id="arrows">
+
 <div>
 <button onclick="setDir('up')">⬆️</button>
 </div>
@@ -313,26 +366,31 @@ margin:5px;
 <button onclick="setDir('down')">⬇️</button>
 <button onclick="setDir('right')">➡️</button>
 </div>
+
 </div>
+<h3>🏆 Ranking</h3>
+<ol id="ranking"></ol>
 
 <script>
-
-let fish=document.getElementById("fish")
-let game=document.getElementById("game")
-
-let x=300
-let y=200
-let vx=0
-let vy=0
-let speed=0.5
-
-let score=0
-let time=120
-
+function spawnBalloonFish(){
+  for(let i=0;i<20;i++){  // ile emoji jednocześnie
+    let f=document.createElement("div");
+    f.className="ballon-fish";
+    f.innerText="🐡";  // emoji rozdymki
+    f.style.left = Math.random() * window.innerWidth + "px";
+    f.style.top = Math.random() * 100 + "px";  // start w górnej części
+    f.style.animationDuration = (2 + Math.random()*2) + "s"; // różna prędkość
+    document.body.appendChild(f);
+    
+    // usuń po animacji
+    setTimeout(()=>f.remove(), 4000);
+  }
+}
 function setDir(dir){
 
 if(dir==="up") vy=-2
 if(dir==="down") vy=2
+
 if(dir==="left"){
 vx=-2
 fish.style.transform="scaleX(1)"
@@ -344,7 +402,6 @@ fish.style.transform="scaleX(-1)"
 }
 
 }
-
 document.addEventListener("keydown",e=>{
 
 if(e.key==="ArrowUp") setDir("up")
@@ -353,33 +410,71 @@ if(e.key==="ArrowLeft") setDir("left")
 if(e.key==="ArrowRight") setDir("right")
 
 })
+/* ELEMENTY */
 
-function gameLoop(){
+let game=document.getElementById("game")
+let fish=document.getElementById("fish")
 
-x+=vx
-y+=vy
+let x=350
+let y=200
+let vx=0
+let vy=0
 
-vx*=0.9
-vy*=0.9
+let score=0
+let time=120
 
-if(x<0)x=0
-if(y<0)y=0
-if(x>660)x=660
-if(y>380)y=380
+/* ROŚLINY */
 
-fish.style.left=x+"px"
-fish.style.top=y+"px"
+for(let i=0;i<8;i++){
 
-moveSnails()
-checkCatch()
+let plant=document.createElement("div")
+plant.className="plant"
+plant.innerHTML="🌿"
+plant.style.left=Math.random()*680+"px"
 
-requestAnimationFrame(gameLoop)
+game.appendChild(plant)
 
 }
 
+/* INNE RYBY */
+
+for(let i=0;i<5;i++){
+
+let f=document.createElement("div")
+f.className="otherFish"
+f.innerHTML="🐟"
+
+f.x=Math.random()*650
+f.y=Math.random()*350
+f.v=Math.random()*1+0.5
+
+f.style.left=f.x+"px"
+f.style.top=f.y+"px"
+
+game.appendChild(f)
+
+}
+
+/* ŚLIMAKI */
+
 function spawnSnail(){
+function spawnGoldSnail(){
 
 let snail=document.createElement("div")
+snail.innerHTML="🟡"
+snail.className="snail"
+snail.gold=true
+
+snail.x=Math.random()*650
+snail.y=Math.random()*380
+
+snail.style.left=snail.x+"px"
+snail.style.top=snail.y+"px"
+snail.style.filter="hue-rotate(80deg) brightness(1.6)"
+
+game.appendChild(snail)
+
+}let snail=document.createElement("div")
 snail.className="snail"
 snail.innerHTML="🐌"
 
@@ -393,14 +488,101 @@ game.appendChild(snail)
 
 }
 
+for(let i=0;i<7;i++) spawnSnail()
+
+/* KREWETKI */
+
+function spawnShrimp(){
+
+let s=document.createElement("div")
+s.className="shrimp"
+s.innerHTML="🦐"
+
+s.x=Math.random()*650
+s.y=Math.random()*380
+
+s.style.left=s.x+"px"
+s.style.top=s.y+"px"
+
+game.appendChild(s)
+
+}
+
+setInterval(spawnShrimp,8000)
+
+/* JOYSTICK */
+
+let joy=document.getElementById("joystick")
+let stick=document.getElementById("stick")
+
+let dragging=false
+
+joy.addEventListener("touchstart",()=>dragging=true)
+
+document.addEventListener("touchend",()=>{
+dragging=false
+vx=0
+vy=0
+stick.style.left="35px"
+stick.style.top="35px"
+})
+
+document.addEventListener("touchmove",e=>{
+
+if(!dragging)return
+
+let rect=joy.getBoundingClientRect()
+
+let dx=e.touches[0].clientX-(rect.left+60)
+let dy=e.touches[0].clientY-(rect.top+60)
+
+vx=dx*0.05
+vy=dy*0.05
+
+stick.style.left=35+dx*0.4+"px"
+stick.style.top=35+dy*0.4+"px"
+
+})
+
+/* RUCH INNYCH RYB */
+
+function moveOtherFish(){
+
+let fishes=document.querySelectorAll(".otherFish")
+
+fishes.forEach(f=>{
+
+f.x+=f.v
+
+if(f.x>700)f.x=-50
+
+f.style.left=f.x+"px"
+
+})
+
+}
+
+/* ŚLIMAKI */
+
 function moveSnails(){
 
 let snails=document.querySelectorAll(".snail")
 
 snails.forEach(s=>{
 
-s.x+=Math.random()*0.5-0.25
-s.y+=Math.random()*0.5-0.25
+let dx=s.x-x
+let dy=s.y-y
+
+let dist=Math.sqrt(dx*dx+dy*dy)
+
+if(dist<120 && dist>0){
+
+let speed=0.4
+
+s.x+=dx/dist*speed
+s.y+=dy/dist*speed
+
+}
 
 s.style.left=s.x+"px"
 s.style.top=s.y+"px"
@@ -409,44 +591,122 @@ s.style.top=s.y+"px"
 
 }
 
+/* ZJEDZENIE */
+
 function checkCatch(){
 
-let snails=document.querySelectorAll(".snail")
-
-snails.forEach(s=>{
+document.querySelectorAll(".snail").forEach(s=>{
 
 if(Math.abs(x-s.x)<30 && Math.abs(y-s.y)<30){
 
 s.remove()
-
-score++
-document.getElementById("score").innerText=score
-
+if(s.gold){
+score+=5
+}else{
+score+=1
+}
 spawnSnail()
 
 }
 
 })
 
+document.querySelectorAll(".shrimp").forEach(s=>{
+
+if(Math.abs(x-s.x)<30 && Math.abs(y-s.y)<30){
+
+s.remove()
+score+=3
+
 }
 
+})
+
+document.getElementById("score").innerText=score
+
+}
+
+/* TIMER */
+
+setInterval(()=>{
 setInterval(()=>{
 
+spawnGoldSnail()
+
+},1000)
 time--
 document.getElementById("time").innerText=time
 
 if(time<=0){
 
-alert("Koniec gry! Twój wynik: "+score)
+saveScore(score)
+
+alert("Koniec gry! Wynik: "+score)
 location.reload()
 
 }
 
 },1000)
 
-for(let i=0;i<5;i++) spawnSnail()
+/* RANKING */
 
+function saveScore(s){
 
+let scores=JSON.parse(localStorage.getItem("kolcosklepScores")||"[]")
+
+scores.push(s)
+
+scores.sort((a,b)=>b-a)
+
+scores=scores.slice(0,5)
+
+localStorage.setItem("kolcosklepScores",JSON.stringify(scores))
+
+}
+
+function showRanking(){
+
+let scores=JSON.parse(localStorage.getItem("kolcosklepScores")||"[]")
+
+let list=document.getElementById("ranking")
+
+scores.forEach(s=>{
+
+let li=document.createElement("li")
+li.innerText=s+" pkt"
+list.appendChild(li)
+
+})
+
+}
+
+showRanking()
+
+/* GŁÓWNA PĘTLA */
+
+function gameLoop(){
+
+x+=vx
+y+=vy
+
+vx*=0.9
+vy*=0.9
+
+if(x<0)x=0
+if(y<0)y=0
+if(x>680)x=680
+if(y>380)y=380
+
+fish.style.left=x+"px"
+fish.style.top=y+"px"
+
+moveSnails()
+moveOtherFish()
+checkCatch()
+
+requestAnimationFrame(gameLoop)
+
+}
 
 gameLoop()
 
@@ -455,7 +715,115 @@ gameLoop()
 </body>
 </html>
 ```
+<div id="arrows">
 
+<div>
+
+
+
+</div>
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+<meta charset="UTF-8">
+<title>Galeria Kolcosklep</title>
+
+<style>
+body{
+  font-family: Arial;
+  background:#f4f9ff;
+  text-align:center;
+  margin:0;
+  padding:20px;
+}
+
+h1{
+  margin-bottom:20px;
+}
+
+.gallery{
+  display:flex;
+  flex-wrap: wrap;
+  justify-content:center;
+  gap:15px;
+}
+
+.gallery img{
+  width:150px;
+  height:150px;
+  object-fit:cover;
+  border-radius:10px;
+  cursor:pointer;
+  transition: transform 0.2s;
+}
+
+.gallery img:hover{
+  transform: scale(1.05);
+}
+
+/* Powiększony obraz */
+#modal{
+  display:none;
+  position:fixed;
+  top:0;
+  left:0;
+  width:100%;
+  height:100%;
+  background: rgba(0,0,0,0.7);
+  justify-content:center;
+  align-items:center;
+  z-index:10;
+}
+
+#modal img{
+  max-width:80%;
+  max-height:80%;
+  border-radius:15px;
+}
+</style>
+</head>
+
+<body>
+<div id="gallery-section">
+  <h2>🖼️ Galeria zdjęć</h2>
+  <div class="gallery">...</div>
+</div>
+<h1>Galeria Kolcobrzuch Karłowaty</h1>
+
+<div class="gallery">
+  <img src="https://upload.wikimedia.org/wikipedia/commons/6/6a/Kolcobrzuch_kar%C5%82owaty.jpg" alt="Kolcobrzuch 1">
+  <img src="data:image/jpeg;base64,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" alt="Kolcobrzuch 2">
+  <img src="data:image/jpeg;base64,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" alt="Kolcobrzuch 3">
+  <img src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSJp9w5VmZBmvE5voVpLiI1tjVMK3ny4K5D6w&s" alt="Kolcobrzuch 4">
+</div>
+
+<!-- Powiększony obraz -->
+<div id="modal">
+  <img src="" alt="Powiększony">
+</div>
+
+<script>
+// Pobieramy wszystkie obrazki w galerii
+const gallery = document.querySelectorAll('.gallery img');
+const modal = document.getElementById('modal');
+const modalImg = modal.querySelector('img');
+
+gallery.forEach(img => {
+  img.addEventListener('click', ()=>{
+    modal.style.display = 'flex';
+    modalImg.src = img.src;
+  });
+});
+
+// Zamknięcie po kliknięciu na tło
+modal.addEventListener('click', ()=>{
+  modal.style.display = 'none';
+});
+</script>
+
+</body>
+</html>
+</div>
 <p>© 2026 Kolcosklep</p>
 <p>www.kolcosklep.com</p>
 
@@ -463,5 +831,4 @@ gameLoop()
 
 </body>
 </html>
-
 
